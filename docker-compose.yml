@@ -1,17 +1,35 @@
 version: '3'
 services:
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      # - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - virtual_network_webservice2
+
   frontend:
     build:
       context: ./frontend
     ports:
-      - "80:3000"
-    volumes:
-      - ./frontend:/app
+      - "3000:3000"
     depends_on:
       - backend
+    networks:
+      - virtual_network_webservice2
 
   backend:
     build:
       context: ./backend
     ports:
       - "5000:5000"
+    networks:
+      - virtual_network_webservice2
+
+networks:
+  virtual_network_webservice2:
+    driver: bridge
